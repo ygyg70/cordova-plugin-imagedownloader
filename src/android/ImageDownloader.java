@@ -4,7 +4,6 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.net.HttpURLConnection;
 import java.io.File;
 import java.io.InputStream;
@@ -67,7 +66,9 @@ public class ImageDownloader extends CordovaPlugin {
 
         Log.d(Log_TAG, String.format("Downloading image from URL: %s", url.toString()));
 
-        Bitmap bitmap = downloadImage(url);
+        String[] fileNameOut = new String[1];
+        fileNameOut[0] = null;
+        Bitmap bitmap = downloadImage(url, fileNameOut );
 
         if (null == bitmap) {
             Log.d(Log_TAG, "Failed to download image");
@@ -75,7 +76,7 @@ public class ImageDownloader extends CordovaPlugin {
             return null;
         }
 
-        File image = saveImage(bitmap, url);
+        File image = saveImage(bitmap, url, fileNameOut[0]);
 
         if (null == image) {
             Log.d(Log_TAG, "Failed to save image");
@@ -129,9 +130,9 @@ public class ImageDownloader extends CordovaPlugin {
         return new File(Environment.getDataDirectory(), fileName);
     }
 
-    private File saveImage(Bitmap bitmap, URL url) {
+    private File saveImage(Bitmap bitmap, URL url, String fileName) {
         File imageFile = null;
-        String fileName = getFileName(url);
+        if( fileName == null || fileName.length() == 0 ) fileName = getFileName(url);
 
         try {
             imageFile = getImageFile(fileName);
@@ -153,7 +154,7 @@ public class ImageDownloader extends CordovaPlugin {
         return URLUtil.guessFileName(url.toString(), null, null);
     }
 
-    private Bitmap downloadImage(URL url) {
+    private Bitmap downloadImage(URL url, String[] fileNameOut) {
         HttpURLConnection conn = null;
         Bitmap bitmap = null;
 
@@ -162,6 +163,13 @@ public class ImageDownloader extends CordovaPlugin {
             conn.connect();
 
             if (HttpURLConnection.HTTP_OK == conn.getResponseCode()) {
+                String cd = conn.getHeaderField("Content-disposition" );
+                if( cd != null){
+                    int idx = cd.indexOf( "filename=");
+                    if( idx > -1 ){
+                        fileNameOut[0] = cd.substring( idx + 9 );
+                    }
+                }
                 InputStream stream = conn.getInputStream();
 
                 if (null != stream) {

@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Santino-Wu/cordova-plugin-imagedownloader.git"
+    "url": "git+https://github.com/ygyg70/cordova-plugin-imagedownloader.git"
   },
   "keywords": [
     "Cordova",
@@ -19,7 +19,7 @@
   "author": "ygyg70",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Santino-Wu/cordova-plugin-imagedownloader/issues"
+    "url": "https://github.com/ygyg70/cordova-plugin-imagedownloader/issues"
   },
-  "homepage": "https://github.com/Santino-Wu/cordova-plugin-imagedownloader#readme"
+  "homepage": "https://github.com/ygyg70/cordova-plugin-imagedownloader#readme"
 }
